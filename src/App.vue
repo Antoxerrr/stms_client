@@ -2,59 +2,76 @@
   <v-app>
     <v-app-bar
       app
+      absolute
       color="primary"
-      dark
     >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
+      <div id="header-text-wrap">
+        <v-icon
+          id="header-icon"
+          large
+          class="mr-3"
+          color="white"
+        >mdi-package-variant-closed</v-icon>
+        <span id="header-text">STMS</span>
       </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
     </v-app-bar>
-
     <v-main>
-      <HelloWorld/>
+      <loading
+        :loading="loadingActive"
+      />
+      <router-view/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+import router from './router';
+import loading from './components/Loading.vue';
 
 export default {
   name: 'App',
-
   components: {
-    HelloWorld,
+    loading,
+  },
+
+  created() {
+    router.beforeResolve((to, from, next) => {
+      this.loadingActive = true;
+      next();
+    });
+
+    router.afterEach(() => {
+      this.loadingActive = false;
+    });
   },
 
   data: () => ({
-    //
+    loadingActive: false,
   }),
 };
 </script>
+
+<style>
+:root {
+  --primary-color: #3579FE;
+  --accent-color: #B1C6F4;
+}
+
+body {
+  background-color: #E5E5E5;
+}
+
+.v-application a {
+  text-decoration: none;
+  font-weight: 500;
+}
+
+#header-text {
+  cursor: default;
+}
+
+#header-text-wrap {
+  font-size: 28px;
+  color: white;
+}
+</style>
