@@ -44,7 +44,7 @@
                 color="primary"
                 depressed
                 block
-              >Войти</v-btn>
+              >Зарегистрироваться</v-btn>
               <v-layout justify-center align-center>
                 <v-checkbox
                   color="primary" label="Запомнить меня">
@@ -58,10 +58,10 @@
               id="reg-button"
               class="auth-button"
               color="accent"
+              @click="pushToAuth"
               depressed
               block
-              @click="pushToRegister"
-            >Зарегистрироваться</v-btn>
+            >Уже есть аккаунт?</v-btn>
           </v-card-text>
         </v-card>
       </v-col>
@@ -73,47 +73,47 @@
 import router from '../router';
 
 export default {
-  name: 'Auth',
+  name: 'Register',
   methods: {
-    pushToRegister: () => {
-      router.push({ name: 'Register' });
+    pushToAuth: () => {
+      router.push({ name: 'Auth' });
     },
   },
 };
 </script>
 
 <style scoped>
-.auth-card-title {
-  color: var(--primary-color) !important;
-  font-size: 24px;
-}
+  .auth-card-title {
+    color: var(--primary-color) !important;
+    font-size: 24px;
+  }
 
-.auth-card-subtitle {
-  color: var(--accent-color) !important;
-  font-size: 18px;
-}
+  .auth-card-subtitle {
+    color: var(--accent-color) !important;
+    font-size: 18px;
+  }
 
-#auth-block {
-  min-width: 450px !important;
-}
+  #auth-block {
+    min-width: 450px !important;
+  }
 
-.auth-button {
-  min-height: 48px;
-}
+  .auth-button {
+    min-height: 48px;
+  }
 
-.theme--light.v-divider {
-  border-color: var(--accent-color) !important;
-}
+  .theme--light.v-divider {
+    border-color: var(--accent-color) !important;
+  }
 
-#forgot-password-link {
-  font-size: 15px;
-}
+  #forgot-password-link {
+    font-size: 15px;
+  }
 
-#reg-button {
-  transition: .2s linear;
-}
+  #reg-button {
+    transition: .2s linear;
+  }
 
-#reg-button:hover {
-  background-color: var(--primary-color) !important;
-}
+  #reg-button:hover {
+    background-color: var(--primary-color) !important;
+  }
 </style>
