@@ -24,19 +24,53 @@
             <v-form>
               <v-text-field
                 class="auth-text-field"
+                label="Имя пользователя"
+                name="username"
+                v-model="form.username"
+                type="text"
+                outlined
+              ></v-text-field>
+
+              <v-text-field
+                class="auth-text-field"
                 label="E-mail"
                 name="email"
+                v-model="form.email"
                 type="email"
                 outlined
               ></v-text-field>
 
               <v-text-field
                 class="auth-text-field"
-                id="password"
                 label="Пароль"
                 name="password"
+                v-model="form.password"
                 type="password"
                 hint="Минимум 8 символов"
+                outlined
+              ></v-text-field>
+              <v-text-field
+                class="auth-text-field"
+                label="Подтверждение пароля"
+                name="passwordConfirmation"
+                v-model="form.passwordConfirmation"
+                type="password"
+                outlined
+              ></v-text-field>
+              <v-text-field
+                class="auth-text-field"
+                label="Имя"
+                name="firstName"
+                v-model="form.firstName"
+                type="text"
+                outlined
+              ></v-text-field>
+              <v-text-field
+                class="auth-text-field"
+                label="Фамилия"
+                name="lastName"
+                v-model="form.lastName"
+                type="text"
                 outlined
               ></v-text-field>
               <v-btn
@@ -45,15 +79,16 @@
                 depressed
                 block
               >Зарегистрироваться</v-btn>
-              <v-layout justify-center align-center>
-                <v-checkbox
-                  color="primary" label="Запомнить меня">
-                </v-checkbox>
-                <v-spacer></v-spacer>
-                <router-link id="forgot-password-link" to="/auth">Забыли пароль?</router-link>
-              </v-layout>
             </v-form>
             <v-divider class="ma-5"></v-divider>
+            <v-layout
+              justify-center
+              align-center
+              class="mb-5"
+              id="have-acc-ask-text"
+            >
+              <span>Уже есть аккаунт?</span>
+            </v-layout>
             <v-btn
               id="reg-button"
               class="auth-button"
@@ -61,7 +96,7 @@
               @click="pushToAuth"
               depressed
               block
-            >Уже есть аккаунт?</v-btn>
+            >Войти</v-btn>
           </v-card-text>
         </v-card>
       </v-col>
@@ -70,6 +105,9 @@
 </template>
 
 <script>
+import {
+  required, email, minLength, sameAs,
+} from 'vuelidate/lib/validators';
 import router from '../router';
 
 export default {
@@ -79,6 +117,30 @@ export default {
       router.push({ name: 'Auth' });
     },
   },
+  data: () => ({
+    form: {
+      username: '',
+      email: '',
+      password: '',
+      passwordConfirmation: '',
+      firstName: '',
+      lastName: '',
+    },
+    validations: {
+      form: {
+        username: { required },
+        email: { required, email },
+        password: {
+          required,
+          minLength: minLength(8),
+        },
+        passwordConfirmation: {
+          sameAs: sameAs('form.password'),
+        },
+        firstName: { required },
+      },
+    },
+  }),
 };
 </script>
 
@@ -111,5 +173,9 @@ export default {
 
   #reg-button:hover {
     background-color: var(--primary-color) !important;
+  }
+
+  #have-acc-ask-text {
+    color: var(--secondary-color);
   }
 </style>
