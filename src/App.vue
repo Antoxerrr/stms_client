@@ -54,7 +54,7 @@ export default {
 <style>
 :root {
   --primary-color: #3579FE;
-  --accent-color: #B1C6F4;
+  --accent-color: #b1c6f4;
 }
 
 body {

@@ -7,14 +7,14 @@
       <v-col
         cols="12"
         sm="8"
-        md="4"
+        md="5"
       >
         <v-card
           id="auth-block"
           class="pa-3"
           tile
         >
-          <v-card-subtitle class="text-md-center auth-card-subtitle">
+          <v-card-subtitle class="text-sm-center auth-card-subtitle">
             STORAGE MANAGEMENT SYSTEM
           </v-card-subtitle>
           <v-card-title class="justify-center auth-card-title">
@@ -91,10 +91,6 @@ export default {
 .auth-card-subtitle {
   color: var(--accent-color) !important;
   font-size: 18px;
-}
-
-#auth-block {
-  min-width: 450px !important;
 }
 
 .auth-button {
