@@ -2,5 +2,7 @@ module.exports = {
   transpileDependencies: [
     'vuetify',
   ],
-  publicPath: '/stms_client/',
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/stms_client/'
+    : '/',
 };
