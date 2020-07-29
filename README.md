@@ -1,5 +1,5 @@
 # stms_client
-
+[![Build Status](https://travis-ci.com/Antoxerrr/stms_client.svg?branch=master)](https://travis-ci.com/Antoxerrr/stms_client)
 ## Project setup
 ```
 npm install

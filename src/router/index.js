@@ -25,6 +25,7 @@ const routes = [
 const router = new VueRouter({
   routes,
   mode: 'history',
+  base: process.env.NODE_ENV === 'production' ? '/stms_client/' : '/',
 });
 
 export default router;
