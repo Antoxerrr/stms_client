@@ -21,7 +21,7 @@
             Добро пожаловать!
           </v-card-title>
           <v-card-text>
-            <v-form>
+            <v-form @submit.prevent="login">
               <v-text-field
                 class="auth-text-field"
                 label="E-mail"
@@ -42,6 +42,7 @@
               <v-btn
                 class="auth-button"
                 color="primary"
+                type="submit"
                 depressed
                 block
               >Войти</v-btn>
@@ -73,7 +74,6 @@
 import router from '../router';
 
 export default {
-  name: 'Auth',
   methods: {
     pushToRegister: () => {
       router.push({ name: 'Register' });
