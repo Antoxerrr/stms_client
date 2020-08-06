@@ -115,6 +115,7 @@ import router from '../router';
 
 const FIELD_REQUIRED_MESSAGE = 'Это поле обязательно для заполнения';
 const passwordMinLength = 8;
+const usernameMinLength = 6;
 
 const allowedSymbols = (value) => Boolean(value.match(/^[A-zА-я]/g));
 
@@ -141,7 +142,10 @@ export default {
   }),
   validations: {
     form: {
-      username: { required },
+      username: {
+        required,
+        minLength: minLength(usernameMinLength),
+      },
       email: { required, email },
       password: {
         required,
@@ -165,6 +169,9 @@ export default {
       const errors = [];
       if (!this.$v.form.username.$dirty) return errors;
       if (!this.$v.form.username.required) errors.push(FIELD_REQUIRED_MESSAGE);
+      if (!this.$v.form.username.minLength) {
+        errors.push(`Минимальная длина для имени пользователя - ${usernameMinLength} символов`);
+      }
       return errors;
     },
     emailErrors() {
