@@ -60,8 +60,8 @@
 
               <v-text-field
                 label="Имя"
-                name="firstName"
-                v-model="$v.form.firstName.$model"
+                name="first_name"
+                v-model="$v.form.first_name.$model"
                 :error-messages="firstNameErrors"
                 type="text"
                 outlined
@@ -69,8 +69,8 @@
 
               <v-text-field
                 label="Фамилия"
-                name="lastName"
-                v-model="$v.form.lastName.$model"
+                name="last_name"
+                v-model="$v.form.last_name.$model"
                 :error-messages="lastNameErrors"
                 type="text"
                 outlined
@@ -82,6 +82,12 @@
                 depressed
                 block
               >Зарегистрироваться</v-btn>
+              <ul v-if="responseErrors.non_field_errors" class="error--text ma-5">
+                <li
+                  v-for="error in responseErrors.non_field_errors"
+                  :key="error.id"
+                >{{ error }}</li>
+              </ul>
             </v-form>
             <v-divider class="ma-5"></v-divider>
             <v-layout
@@ -112,21 +118,40 @@ import {
   required, email, minLength, sameAs,
 } from 'vuelidate/lib/validators';
 import router from '../router';
+import { REGISTER } from '../store/actions.type';
 
 const FIELD_REQUIRED_MESSAGE = 'Это поле обязательно для заполнения';
 const passwordMinLength = 8;
 const usernameMinLength = 6;
 
-const allowedSymbols = (value) => Boolean(value.match(/^[A-zА-я]/g));
+const allowedSymbols = (value) => !value.match(/[^A-zА-я]/g);
 
 export default {
   methods: {
     pushToAuth: () => {
       router.push({ name: 'Auth' });
     },
+    cleanResponseErrors(key) {
+      if (key) {
+        this.responseErrors[key] = [];
+      } else {
+        this.responseErrors = {};
+      }
+    },
     register() {
-      if (this.$v.form.$invalid) {
-        this.$v.touch();
+      this.cleanResponseErrors();
+      this.$v.$touch();
+      if (!this.$v.$invalid) {
+        this.$store.dispatch(REGISTER, this.form)
+          .then(() => {
+            this.pushToAuth();
+          })
+          .catch((error) => {
+            if (error.response.status === 400) {
+              this.responseErrors = error.response.data;
+              this.$v.$touch();
+            }
+          });
       }
     },
   },
@@ -136,9 +161,11 @@ export default {
       email: '',
       password: '',
       passwordConfirmation: '',
-      firstName: '',
-      lastName: '',
+      first_name: '',
+      last_name: '',
     },
+    responseErrors: {},
+    responseNonFieldErrors: {},
   }),
   validations: {
     form: {
@@ -152,33 +179,43 @@ export default {
         minLength: minLength(passwordMinLength),
       },
       passwordConfirmation: {
+        required,
         // eslint-disable-next-line func-names
         sameAs: sameAs(function () { return this.$v.form.password.$model; }),
       },
-      firstName: {
+      first_name: {
         required,
         allowedSymbols,
       },
-      lastName: {
+      last_name: {
+        required,
         allowedSymbols,
       },
     },
   },
   computed: {
     usernameErrors() {
-      const errors = [];
+      let errors = [];
       if (!this.$v.form.username.$dirty) return errors;
       if (!this.$v.form.username.required) errors.push(FIELD_REQUIRED_MESSAGE);
       if (!this.$v.form.username.minLength) {
         errors.push(`Минимальная длина для имени пользователя - ${usernameMinLength} символов`);
       }
+      if (this.responseErrors.username) {
+        errors = errors.concat(this.responseErrors.username);
+        this.cleanResponseErrors('username');
+      }
       return errors;
     },
     emailErrors() {
-      const errors = [];
+      let errors = [];
       if (!this.$v.form.email.$dirty) return errors;
       if (!this.$v.form.email.required) errors.push(FIELD_REQUIRED_MESSAGE);
       else if (!this.$v.form.email.email) errors.push('Введите корректный email');
+      if (this.responseErrors.email) {
+        errors = errors.concat(this.responseErrors.email);
+        this.cleanResponseErrors('email');
+      }
       return errors;
     },
     passwordErrors() {
@@ -193,23 +230,33 @@ export default {
     passwordConfirmationErrors() {
       const errors = [];
       if (!this.$v.form.passwordConfirmation.$dirty) return errors;
+      if (!this.$v.form.passwordConfirmation.required) errors.push(FIELD_REQUIRED_MESSAGE);
       if (!this.$v.form.passwordConfirmation.sameAs) errors.push('Пароли не совпадают');
       return errors;
     },
     firstNameErrors() {
-      const errors = [];
-      if (!this.$v.form.firstName.$dirty) return errors;
-      if (!this.$v.form.firstName.required) errors.push(FIELD_REQUIRED_MESSAGE);
-      else if (!this.$v.form.firstName.allowedSymbols) {
+      let errors = [];
+      if (!this.$v.form.first_name.$dirty) return errors;
+      if (!this.$v.form.first_name.required) errors.push(FIELD_REQUIRED_MESSAGE);
+      else if (!this.$v.form.first_name.allowedSymbols) {
         errors.push('Введены недопустимые символы');
+      }
+      if (this.responseErrors.first_name) {
+        errors = errors.concat(this.responseErrors.first_name);
+        this.cleanResponseErrors('first_name');
       }
       return errors;
     },
     lastNameErrors() {
-      const errors = [];
-      if (!this.$v.form.lastName.$dirty) return errors;
-      if (!this.$v.form.firstName.allowedSymbols) {
+      let errors = [];
+      if (!this.$v.form.last_name.$dirty) return errors;
+      if (!this.$v.form.last_name.required) errors.push(FIELD_REQUIRED_MESSAGE);
+      if (!this.$v.form.last_name.allowedSymbols) {
         errors.push('Введены недопустимые символы');
+      }
+      if (this.responseErrors.last_name) {
+        errors = errors.concat(this.responseErrors.last_name);
+        this.cleanResponseErrors('last_name');
       }
       return errors;
     },
@@ -234,10 +281,6 @@ export default {
 
   .theme--light.v-divider {
     border-color: var(--accent-color) !important;
-  }
-
-  #forgot-password-link {
-    font-size: 15px;
   }
 
   #reg-button {

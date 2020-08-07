@@ -1,15 +1,16 @@
-import { CHECK_AUTH, LOGIN, LOGOUT } from '@/store/actions.type';
+import { LOGIN, LOGOUT, REGISTER } from '@/store/actions.type';
 import Vue from 'vue';
-import { PURGE_AUTH, SET_AUTH, SET_ERROR } from '@/store/mutations.type';
 import {
-  destroyToken, getToken, saveToken, setHeader,
+  PURGE_AUTH, SET_AUTH, SET_ERROR,
+  START_LOADING, STOP_LOADING,
+} from '@/store/mutations.type';
+import {
+  destroyToken, getToken, saveToken,
 } from '@/common/token';
-import router from '@/router';
 
 const state = {
   user: {},
   isAuthenticated: !!getToken(),
-  wrongCredentials: false,
 };
 
 const getters = {
@@ -20,20 +21,37 @@ const getters = {
 
 const actions = {
   [LOGIN](context, credentials) {
-    return new Promise((resolve) => {
+    context.commit(START_LOADING);
+    return new Promise((resolve, reject) => {
       Vue.axios.post('token/', credentials)
-        .then(({ data }) => {
-          context.commit(SET_AUTH, data);
-          resolve(data);
+        .then((response) => {
+          context.commit(SET_AUTH, response.data);
+          resolve(response);
+          context.commit(STOP_LOADING);
         })
         .catch((error) => {
-          context.commit(SET_ERROR, error);
+          context.commit(SET_ERROR, error.response);
+          reject(error.response.status);
+          context.commit(STOP_LOADING);
+        });
+    });
+  },
+  [REGISTER](context, data) {
+    context.commit(START_LOADING);
+    return new Promise((resolve, reject) => {
+      Vue.axios.post('accounts/register/', data)
+        .then(() => {
+          resolve();
+          context.commit(STOP_LOADING);
+        })
+        .catch((error) => {
+          reject(error);
+          context.commit(STOP_LOADING);
         });
     });
   },
   [LOGOUT](context) {
     context.commit(PURGE_AUTH);
-    router.push({ name: 'Auth' });
   },
 };
 
@@ -46,7 +64,6 @@ const mutations = {
   },
   [SET_ERROR](state, response) {
     if (response.status === 401) {
-      state.wrongCredentials = true;
       state.isAuthenticated = false;
       state.user = {};
     }
@@ -56,13 +73,6 @@ const mutations = {
     state.isAuthenticated = false;
     state.wrongCredentials = false;
     destroyToken();
-  },
-  [CHECK_AUTH](context) {
-    if (getToken()) {
-      setHeader();
-    } else {
-      context.commit(PURGE_AUTH);
-    }
   },
 };
 

@@ -6,9 +6,7 @@ export const saveToken = (token) => {
   window.localStorage.setItem(TOKEN_KEY, token);
 };
 
-export const getToken = () => {
-  window.localStorage.getItem(TOKEN_KEY);
-};
+export const getToken = () => window.localStorage.getItem(TOKEN_KEY);
 
 export const destroyToken = () => {
   window.localStorage.removeItem(TOKEN_KEY);
