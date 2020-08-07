@@ -9,6 +9,7 @@
         color="white"
         class="mr-5"
         @click.stop="leftMenu = !leftMenu"
+        v-if="isAuthenticated"
       ></v-app-bar-nav-icon>
       <div id="header-text-wrap">
         <v-icon
@@ -19,12 +20,22 @@
         >mdi-package-variant-closed</v-icon>
         <span id="header-text">STMS</span>
       </div>
+      <div id="logout-btn-wrap" v-if="isAuthenticated">
+        <v-btn
+          text
+          color="white"
+          @click.prevent="logout"
+        >
+          <v-icon class="mr-1">mdi-exit-to-app</v-icon>
+          <span>Выйти</span>
+        </v-btn>
+      </div>
     </v-app-bar>
     <v-navigation-drawer
       v-model="leftMenu"
       app
     >
-
+      <left-menu/>
     </v-navigation-drawer>
     <v-main>
       <loading
@@ -40,23 +51,32 @@
 
 <script>
 import { mapState } from 'vuex';
+import { LOGOUT } from '@/store/actions.type';
 import loading from './components/Loading.vue';
+import leftMenu from './components/LeftMenu.vue';
 
 export default {
   name: 'App',
   components: {
     loading,
+    leftMenu,
   },
 
   computed: {
     ...mapState({
       loadingActive: (state) => state.loading.loadingActive,
+      isAuthenticated: (state) => state.auth.isAuthenticated,
     }),
   },
 
   data: () => ({
     leftMenu: false,
   }),
+  methods: {
+    logout() {
+      this.$store.dispatch(LOGOUT).then(() => this.$router.push({ name: 'Auth' }));
+    },
+  },
 };
 </script>
 
@@ -96,5 +116,8 @@ body {
 .fade-leave-active {
   transition: opacity .1s ease;
   opacity: 0;
+}
+#logout-btn-wrap{
+  margin-left: auto;
 }
 </style>

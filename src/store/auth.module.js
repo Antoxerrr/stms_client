@@ -69,7 +69,7 @@ const mutations = {
     }
   },
   [PURGE_AUTH](state) {
-    state.user = {};
+    state.account = {};
     state.isAuthenticated = false;
     state.wrongCredentials = false;
     destroyToken();
