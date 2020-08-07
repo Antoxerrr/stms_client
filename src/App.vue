@@ -5,6 +5,11 @@
       absolute
       color="primary"
     >
+      <v-app-bar-nav-icon
+        color="white"
+        class="mr-5"
+        @click.stop="leftMenu = !leftMenu"
+      ></v-app-bar-nav-icon>
       <div id="header-text-wrap">
         <v-icon
           id="header-icon"
@@ -15,17 +20,26 @@
         <span id="header-text">STMS</span>
       </div>
     </v-app-bar>
+    <v-navigation-drawer
+      v-model="leftMenu"
+      app
+    >
+
+    </v-navigation-drawer>
     <v-main>
       <loading
         :loading="loadingActive"
+        color="primary"
       />
-      <router-view/>
+      <transition name="fade" mode="out-in">
+        <router-view/>
+      </transition>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import router from './router';
+import { mapState } from 'vuex';
 import loading from './components/Loading.vue';
 
 export default {
@@ -34,19 +48,14 @@ export default {
     loading,
   },
 
-  created() {
-    router.beforeResolve((to, from, next) => {
-      this.loadingActive = true;
-      next();
-    });
-
-    router.afterEach(() => {
-      this.loadingActive = false;
-    });
+  computed: {
+    ...mapState({
+      loadingActive: (state) => state.loading.loadingActive,
+    }),
   },
 
   data: () => ({
-    loadingActive: false,
+    leftMenu: false,
   }),
 };
 </script>
@@ -74,5 +83,18 @@ body {
 #header-text-wrap {
   font-size: 28px;
   color: white;
+}
+
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  transition: opacity .1s ease;
+}
+
+.fade-leave-active {
+  transition: opacity .1s ease;
+  opacity: 0;
 }
 </style>

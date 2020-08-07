@@ -21,12 +21,14 @@
             Добро пожаловать!
           </v-card-title>
           <v-card-text>
-            <v-form>
+            <v-form @submit.prevent="login">
               <v-text-field
                 class="auth-text-field"
-                label="E-mail"
-                name="email"
-                type="email"
+                label="Имя пользователя"
+                name="username"
+                type="text"
+                v-model="$v.form.username.$model"
+                :error-messages="usernameErrors"
                 outlined
               ></v-text-field>
 
@@ -37,14 +39,20 @@
                 name="password"
                 type="password"
                 hint="Минимум 8 символов"
+                v-model="$v.form.password.$model"
+                :error-messages="passwordErrors"
                 outlined
               ></v-text-field>
               <v-btn
                 class="auth-button"
                 color="primary"
+                type="submit"
                 depressed
                 block
               >Войти</v-btn>
+              <v-layout justify-center align-center v-if="wrongCredentials">
+                <p class="mt-5 error--text">Неверный логин или пароль</p>
+              </v-layout>
               <v-layout justify-center align-center>
                 <v-checkbox
                   color="primary" label="Запомнить меня">
@@ -70,15 +78,59 @@
 </template>
 
 <script>
+import { required } from 'vuelidate/lib/validators';
+import { LOGIN } from '@/store/actions.type';
 import router from '../router';
 
+const FIELD_REQUIRED_MESSAGE = 'Это поле обязательно для заполнения';
+
 export default {
-  name: 'Auth',
+  computed: {
+    usernameErrors() {
+      const errors = [];
+      if (!this.$v.form.username.$dirty) return errors;
+      if (!this.$v.form.username.required) errors.push(FIELD_REQUIRED_MESSAGE);
+      return errors;
+    },
+    passwordErrors() {
+      const errors = [];
+      if (!this.$v.form.password.$dirty) return errors;
+      if (!this.$v.form.password.required) errors.push(FIELD_REQUIRED_MESSAGE);
+      return errors;
+    },
+  },
   methods: {
     pushToRegister: () => {
       router.push({ name: 'Register' });
     },
+
+    login() {
+      this.$v.$touch();
+      if (!this.$v.$invalid) {
+        this.$store.dispatch(LOGIN, this.form)
+          .then(() => {
+            this.wrongCredentials = false;
+            router.push({ name: 'Home' });
+          })
+          .catch((status) => {
+            if (status === 401) this.wrongCredentials = true;
+          });
+      }
+    },
   },
+  validations: {
+    form: {
+      username: { required },
+      password: { required },
+    },
+  },
+  data: () => ({
+    form: {
+      username: '',
+      password: '',
+    },
+    wrongCredentials: false,
+  }),
 };
 </script>
 
