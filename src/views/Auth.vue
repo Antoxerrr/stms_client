@@ -50,6 +50,9 @@
                 depressed
                 block
               >Войти</v-btn>
+              <v-layout justify-center align-center v-if="wrongCredentials">
+                <p class="mt-5 error--text">Неверный логин или пароль</p>
+              </v-layout>
               <v-layout justify-center align-center>
                 <v-checkbox
                   color="primary" label="Запомнить меня">
@@ -104,9 +107,14 @@ export default {
     login() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
-        this.$store
-          .dispatch(LOGIN, this.form)
-          .then(() => console.log('готово!!1'));
+        this.$store.dispatch(LOGIN, this.form)
+          .then(() => {
+            this.wrongCredentials = false;
+            router.push({ name: 'Home' });
+          })
+          .catch((status) => {
+            if (status === 401) this.wrongCredentials = true;
+          });
       }
     },
   },
@@ -121,6 +129,7 @@ export default {
       username: '',
       password: '',
     },
+    wrongCredentials: false,
   }),
 };
 </script>
