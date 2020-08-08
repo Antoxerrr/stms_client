@@ -14,7 +14,6 @@
       <div id="header-text-wrap">
         <v-icon
           id="header-icon"
-          large
           class="mr-3"
           color="white"
         >mdi-package-variant-closed</v-icon>
@@ -87,8 +86,8 @@ export default {
   --secondary-color: #424242;
 }
 
-body {
-  background-color: #E5E5E5;
+.theme--light.v-application {
+  background-color: #f4f6f8 !important;
 }
 
 .v-application a {
@@ -100,8 +99,12 @@ body {
   cursor: default;
 }
 
+#header-icon {
+  font-size: 1.5em;
+}
+
 #header-text-wrap {
-  font-size: 28px;
+  font-size: 1.5em;
   color: white;
 }
 
@@ -119,5 +122,8 @@ body {
 }
 #logout-btn-wrap{
   margin-left: auto;
+}
+h2 {
+  color: #263238;
 }
 </style>
