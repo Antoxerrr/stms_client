@@ -1,14 +1,13 @@
 import { GET_ACCOUNT } from '@/store/actions.type';
 import Vue from 'vue';
 import { UPDATE_ACCOUNT } from '@/store/mutations.type';
+import { getAccount, setAccount } from '../common/account';
 
 const state = {
-  account: {},
+  account: getAccount(),
 };
 
-const getters = {
-  accountInfo: (state) => state.account,
-};
+const getters = {};
 
 const actions = {
   [GET_ACCOUNT](context) {
@@ -24,6 +23,7 @@ const actions = {
 
 const mutations = {
   [UPDATE_ACCOUNT](state, account) {
+    setAccount(account);
     state.account = account;
   },
 };
