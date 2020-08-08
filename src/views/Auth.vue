@@ -79,7 +79,7 @@
 
 <script>
 import { required } from 'vuelidate/lib/validators';
-import { LOGIN } from '@/store/actions.type';
+import { LOGIN, GET_ACCOUNT } from '@/store/actions.type';
 import router from '../router';
 
 const FIELD_REQUIRED_MESSAGE = 'Это поле обязательно для заполнения';
@@ -111,6 +111,7 @@ export default {
           .then(() => {
             this.wrongCredentials = false;
             router.push({ name: 'Home' });
+            this.$store.dispatch(GET_ACCOUNT);
           })
           .catch((status) => {
             if (status === 401) this.wrongCredentials = true;

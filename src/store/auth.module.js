@@ -5,8 +5,9 @@ import {
   START_LOADING, STOP_LOADING,
 } from '@/store/mutations.type';
 import {
-  destroyToken, getToken, saveToken,
+  destroyToken, getToken, saveToken, setHeader,
 } from '@/common/token';
+import { removeAccount } from '../common/account';
 
 const state = {
   user: {},
@@ -61,6 +62,7 @@ const mutations = {
     state.wrongCredentials = false;
     state.user = {};
     saveToken(data.access);
+    setHeader();
   },
   [SET_ERROR](state, response) {
     if (response.status === 401) {
@@ -69,10 +71,10 @@ const mutations = {
     }
   },
   [PURGE_AUTH](state) {
-    state.user = {};
     state.isAuthenticated = false;
     state.wrongCredentials = false;
     destroyToken();
+    removeAccount();
   },
 };
 
