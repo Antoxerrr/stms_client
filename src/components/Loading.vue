@@ -2,6 +2,7 @@
   <v-progress-linear
     :active="loading"
     :color="color"
+    background-opacity="0"
     :indeterminate="true"
     class="ma-0"
     height="4"
