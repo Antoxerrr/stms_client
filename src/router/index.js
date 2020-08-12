@@ -20,6 +20,15 @@ const routes = [
     name: 'Register',
     component: () => import(/* webpackChunkName: "auth" */ '../views/Register.vue'),
   },
+  {
+    path: '/404',
+    name: '404',
+    component: () => import(/* webpackChunkName: "notfound" */ '../views/NotFound.vue'),
+  },
+  {
+    path: '*',
+    redirect: '/404',
+  },
 ];
 
 const router = new VueRouter({
