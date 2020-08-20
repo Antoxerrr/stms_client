@@ -32,6 +32,26 @@
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
+      <v-list-item link @click="pushToProductList">
+        <v-list-item-icon>
+          <v-icon>mdi-diamond</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>
+            Список товаров
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item link @click="pushToCart">
+        <v-list-item-icon>
+          <v-icon>mdi-cart</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>
+            Корзина
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
     </v-list>
   </v-layout>
 </template>
@@ -55,6 +75,12 @@ export default {
     },
     pushToProfile() {
       this.$router.push({ name: 'Profile' });
+    },
+    pushToProductList() {
+      this.$router.push({ name: 'ProductList' });
+    },
+    pushToCart() {
+      this.$router.push({ name: 'Cart' });
     },
     userRole() {
       if (this.account.groups) return this.account.groups[0];

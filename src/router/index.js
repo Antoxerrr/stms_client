@@ -3,6 +3,8 @@ import VueRouter from 'vue-router';
 import { isAuthenticated, isNotAuthenticated } from '@/router/guards';
 import Home from '../views/Home.vue';
 import Profile from '../views/Profile.vue';
+import ProductList from '../views/ProductList.vue';
+import Cart from '../views/Cart.vue';
 
 Vue.use(VueRouter);
 
@@ -17,6 +19,18 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: Profile,
+    beforeEnter: isAuthenticated,
+  },
+  {
+    path: '/productlist',
+    name: 'ProductList',
+    component: ProductList,
+    beforeEnter: isAuthenticated,
+  },
+  {
+    path: '/cart',
+    name: 'Cart',
+    component: Cart,
     beforeEnter: isAuthenticated,
   },
   {
