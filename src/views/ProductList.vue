@@ -42,11 +42,11 @@
         </v-card>
       </v-col>
       <v-col cols="8" xl="6">
-        <div v-if="products.length">
+        <div v-if="PRODS.length">
           <Product
             :product_data="product"
             :key="product.id"
-            v-for="product of products"
+            v-for="product of PRODS"
             @sendArticle="showarticle"
           />
         </div>
@@ -57,7 +57,9 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Product from '@/components/Product.vue';
+import { GET_PRODUCTS } from '../store/actions.type';
 
 export default {
   name: 'ProductList',
@@ -65,6 +67,7 @@ export default {
     Product,
   },
   computed: {
+    ...mapGetters(['PRODS']),
     categories() {
       return [
         { name: 'asd' },
@@ -73,18 +76,17 @@ export default {
     },
   },
   data: () => ({
-    products: [
-      {
-        id: 0, name: 'lego', category: 'toys', description: 'lego toy', price: 545, in_storage: 14, bar_code: 123123,
-      },
-    ],
   }),
   methods: {
     showarticle(value) {
       console.log(value);
     },
   },
+  mounted() {
+    this.$store.dispatch(GET_PRODUCTS);
+  },
 };
+
 </script>
 
 <style scoped>
