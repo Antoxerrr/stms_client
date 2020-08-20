@@ -18,7 +18,7 @@ const actions = {
   [GET_PRODUCTS](context) {
     context.commit(START_LOADING);
     return new Promise(((resolve) => {
-      Vue.axios.get('http://pavelm.pythonanywhere.com/api/products/?format=json')
+      Vue.axios.get('/products')
         .then((products) => {
           context.commit(UPDATE_PRODUCTS, products.data);
           resolve(products.data);
