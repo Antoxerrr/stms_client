@@ -1,10 +1,15 @@
 import Vue from 'vue';
-import { GET_PRODUCTS, ADD_TO_CART } from '@/store/actions.type';
+import {
+  GET_PRODUCTS,
+  ADD_TO_CART,
+  DELETE_FROM_CART,
+} from '@/store/actions.type';
 import {
   UPDATE_PRODUCTS,
   START_LOADING,
   STOP_LOADING,
-  UPDATE_CART,
+  MOVE_TO_CART,
+  REMOVE_FROM_CART,
 } from '@/store/mutations.type';
 
 const state = {
@@ -35,7 +40,10 @@ const actions = {
     }));
   },
   [ADD_TO_CART](context, product) {
-    context.commit(UPDATE_CART, product);
+    context.commit(MOVE_TO_CART, product);
+  },
+  [DELETE_FROM_CART](context, index) {
+    context.commit(REMOVE_FROM_CART, index);
   },
 };
 
@@ -43,8 +51,24 @@ const mutations = {
   [UPDATE_PRODUCTS](state, products) {
     state.products = products;
   },
-  [UPDATE_CART](state, product) {
-    state.cart.push(product);
+  [MOVE_TO_CART](state, product) {
+    if (state.cart.length) {
+      let isProdExists = false;
+      state.cart.map((item) => {
+        if (item.id === product.id) {
+          isProdExists = true;
+        }
+        return isProdExists;
+      });
+      if (!isProdExists) {
+        state.cart.push(product);
+      }
+    } else {
+      state.cart.push(product);
+    }
+  },
+  [REMOVE_FROM_CART](state, index) {
+    state.cart.splice(index, 1);
   },
 };
 

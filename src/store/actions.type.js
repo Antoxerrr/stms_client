@@ -4,3 +4,4 @@ export const REGISTER = 'register';
 export const GET_ACCOUNT = 'getAccountInfo';
 export const GET_PRODUCTS = 'getProducts';
 export const ADD_TO_CART = 'addToCart';
+export const DELETE_FROM_CART = 'deleteFromCart';

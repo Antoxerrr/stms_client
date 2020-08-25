@@ -14,12 +14,22 @@
          </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title class="headline">{{product_data.name}}</v-list-item-title>
-          <v-list-item-subtitle>{{product_data.description}}</v-list-item-subtitle>
+          <v-list-item-subtitle>{{product_data.quantity}}</v-list-item-subtitle>
          </v-list-item-content>
       </v-list-item>
      </v-col>
      <v-col cols="3" align-self="center">
       <v-list-item-subtitle>{{product_data.price}} P/Ед.</v-list-item-subtitle>
+      <v-card-actions>
+        <v-btn
+          raised
+          x-large
+          color="primary"
+          @click="deleteFromCart"
+        >
+          delete
+        </v-btn>
+      </v-card-actions>
     </v-col>
    </v-row>
 </v-card>
@@ -35,7 +45,12 @@ export default {
     },
   },
   methods: {
-
+    deleteFromCart() {
+      this.$emit('deleteFromCart', this.product_data.id);
+    },
+  },
+  mounted() {
+    this.$set(this.product_data, 'quantity', 1);
   },
 };
 </script>

@@ -4,9 +4,10 @@
       <v-col cols="8" xl="6">
         <div v-if="CART.length">
           <CartProduct
-            :product_data="product"
-            :key="product.id"
-            v-for="product of CART"
+            :product_data="item"
+            v-for="(item, index) of CART"
+            :key="item.id"
+            @deleteFromCart="deleteFromCart(index)"
           />
         </div>
         <p v-else class='no-items'>No items!</p>
@@ -30,7 +31,8 @@
 
 <script>
 import CartProduct from '@/components/CartProduct.vue';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
+import { DELETE_FROM_CART } from '../store/actions.type';
 
 export default {
   name: 'Cart',
@@ -41,6 +43,12 @@ export default {
   }),
   computed: {
     ...mapGetters(['CART']),
+  },
+  methods: {
+    ...mapActions(['DELETE_FROM_CART']),
+    deleteFromCart(index) {
+      this.$store.dispatch(DELETE_FROM_CART, index);
+    },
   },
 };
 </script>
