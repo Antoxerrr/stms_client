@@ -25,7 +25,7 @@
           raised
           x-large
           color="primary"
-          @click="sendToCart"
+          @click="addToCart"
         >
           В корзину
         </v-btn>
@@ -45,8 +45,8 @@ export default {
     },
   },
   methods: {
-    sendToCart() {
-      this.$emit('sendArticle', this.product_data.bar_code);
+    addToCart() {
+      this.$emit('addToCart', this.product_data);
     },
   },
 };

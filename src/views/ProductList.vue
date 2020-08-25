@@ -47,7 +47,7 @@
             :product_data="product"
             :key="product.id"
             v-for="product of PRODS"
-            @sendArticle="showarticle"
+            @addToCart="addToCart"
           />
         </div>
         <p v-else class='no-items'>No items!</p>
@@ -57,9 +57,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import Product from '@/components/Product.vue';
-import { GET_PRODUCTS } from '../store/actions.type';
+import { GET_PRODUCTS, ADD_TO_CART } from '../store/actions.type';
 
 export default {
   name: 'ProductList',
@@ -72,8 +72,11 @@ export default {
   data: () => ({
   }),
   methods: {
-    showarticle(value) {
-      console.log(value);
+    methods: {
+      ...mapActions(['ADD_TO_CART']),
+    },
+    addToCart(data) {
+      this.$store.dispatch(ADD_TO_CART, data);
     },
   },
   mounted() {

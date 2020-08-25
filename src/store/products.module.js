@@ -1,17 +1,20 @@
 import Vue from 'vue';
-import { GET_PRODUCTS } from '@/store/actions.type';
+import { GET_PRODUCTS, ADD_TO_CART } from '@/store/actions.type';
 import {
   UPDATE_PRODUCTS,
   START_LOADING,
   STOP_LOADING,
+  UPDATE_CART,
 } from '@/store/mutations.type';
 
 const state = {
   products: [],
+  cart: [],
 };
 
 const getters = {
   PRODS: (state) => state.products,
+  CART: (state) => state.cart,
 };
 
 const actions = {
@@ -31,11 +34,17 @@ const actions = {
         });
     }));
   },
+  [ADD_TO_CART](context, product) {
+    context.commit(UPDATE_CART, product);
+  },
 };
 
 const mutations = {
   [UPDATE_PRODUCTS](state, products) {
     state.products = products;
+  },
+  [UPDATE_CART](state, product) {
+    state.cart.push(product);
   },
 };
 
